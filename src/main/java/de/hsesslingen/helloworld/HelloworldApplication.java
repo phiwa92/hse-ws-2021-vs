@@ -7,6 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 @RestController
 public class HelloworldApplication {
@@ -15,6 +18,27 @@ public class HelloworldApplication {
 
 	@Value("${my.property:unset}")
 	String internalProperty;
+	List<String> visitors = new ArrayList<String>();
+
+	@GetMapping("/visitors") // "/" is default
+	public List<String> getVisitors() {
+		logger.info("Visitor List requested");
+		return visitors;
+	}
+
+	@PostMapping("/visit/{paramProperty}")
+	public List<String> setVisitor(@PathVariable String paramProperty) {
+		logger.info("New visitor added: {}", paramProperty);
+		this.visitors.add(paramProperty);
+		return this.visitors;
+	}
+
+	@DeleteMapping("/visit/{paramProperty}")
+	public List<String> deleteVisitor(@PathVariable String paramProperty) {
+		logger.info("Visitor deleted: {}", paramProperty);
+		this.visitors.remove(paramProperty);
+		return this.visitors;
+	}
 
 	@GetMapping("/hello") // "/" is default
 	public String sayHello() {
